@@ -1,7 +1,7 @@
 # autotele
 auto telegram
 
-Go to my.telegram.org  and log in.
+Go to https://my.telegram.org/  and log in.
 
 Click on API development tools and fill the required fields.
 
