@@ -2,24 +2,23 @@ from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import InputPeerEmpty
 import csv
-from telethon.tl.functions.channels import InviteToChannelRequest
- 
-api_id = 12345 #api id
-api_hash = 'api hash'
-phone = '+62' #masukan nomor
+
+api_id = 'xxx'
+api_hash = 'xxx'
+phone = '+62'
 client = TelegramClient(phone, api_id, api_hash)
- 
+
 client.connect()
 if not client.is_user_authorized():
     client.send_code_request(phone)
-    client.sign_in(phone, input('Enter verification code: ')) #masukan verifikasi code yang didapat dari telegram
-    
- 
- 
+    client.sign_in(phone, input('Enter the code: '))
+
+
 chats = []
 last_date = None
 chunk_size = 200
 groups=[]
+ 
 result = client(GetDialogsRequest(
              offset_date=last_date,
              offset_id=0,
@@ -27,6 +26,7 @@ result = client(GetDialogsRequest(
              limit=chunk_size,
              hash = 0
          ))
+chats.extend(result.chats)
 
 for chat in chats:
     try:
@@ -34,20 +34,20 @@ for chat in chats:
             groups.append(chat)
     except:
         continue
- 
-print('select group to take member id: ')
+
+print('Choose a group to scrape members from:')
 i=0
 for g in groups:
     print(str(i) + '- ' + g.title)
     i+=1
- 
+
 g_index = input("Enter a Number: ")
 target_group=groups[int(g_index)]
- 
+
 print('Fetching Members...')
 all_participants = []
 all_participants = client.get_participants(target_group, aggressive=True)
- 
+
 print('Saving In file...')
 with open("members.csv","w",encoding='UTF-8') as f:
     writer = csv.writer(f,delimiter=",",lineterminator="\n")
